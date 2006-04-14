@@ -1,0 +1,9 @@
+Revision history for Perl extension Snort::Rule.
+
+1.00  Fri Apr 14 12:05:00 2006
+	- Module Cleaned up
+	- Documentation cleaned for initial release
+
+0.01  Sun Jan  1 16:28:05 2006
+	- original version; created by h2xs 1.23 with options
+		-AXc -n Snort::Rule
