@@ -40,7 +40,7 @@ use 5.008006;
 use strict;
 use warnings;
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 # Put any options in here that require quotes around them
 my @QUOTED_OPTIONS = ('MSG','URICONTENT','CONTENT','PCRE');
@@ -53,13 +53,14 @@ Reads in the initial headers to generate a rule and constructs the snort::rule o
 
 Accepts:
 
-  -action [string] ? [alert|log|pass|...] : 'alert'
-  -proto [string] ? [ip|udp|tcp|...] : 'IP'
-  -src [string] ? [$strIp] : 'any'
-  -sport [int] ? [$sport] : 'any'
-  -dir [string] ? [->|<-|<>] : '->'
-  -dst [string] ? [$strIp] : 'any'
-  -dport [int] ? [$dport] : 'any'
+  -action => [string] ? [alert|log|pass|...] : 'alert'
+  -proto => [string] ? [ip|udp|tcp|...] : 'IP'
+  -src => [string] ? [$strIp] : 'any'
+  -sport => [int] ? [$sport] : 'any'
+  -dir => [string] ? [->|<-|<>] : '->'
+  -dst => [string] ? [$strIp] : 'any'
+  -dport => [int] ? [$dport] : 'any'
+  -opts => [hashref] ? [hashref] : '';
 
   -parse => $strRule # for parsing an existing rule into the object
 
@@ -87,6 +88,7 @@ sub init {
 	$parms{-dir} 	= $parms{-dir} ? $parms{-dir} : '->';
 	$parms{-dst} 	= $parms{-dst} ? $parms{-dst} : 'any';
 	$parms{-dport} 	= $parms{-dport} ? $parms{-dport} : 'any';
+	$parms{-opts} 	= $parms{-opts} ? (ref($parms{-opts} eq 'HASH') : '';
 
 	$self->action(	$parms{-action});
 	$self->proto(	$parms{-proto});
@@ -95,6 +97,7 @@ sub init {
 	$self->dir(	$parms{-dir});
 	$self->dst(	$parms{-dst});
 	$self->dport(	$parms{-dport});
+	$self->opts(	$parms{-opts});
 }
 
 =head2 string

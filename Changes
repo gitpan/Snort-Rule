@@ -1,5 +1,8 @@
 Revision history for Perl extension Snort::Rule.
 
+1.02  Wed May 17 14:06:00
+	- fixed new() so you can pass the -opts parm with a HASHREF
+
 1.01  Wed May 17 15:17:00
 	- ALTERED THE API!! parms are now prefixed by '-' (ie: '-parm => ').
 	- Fixed new() so default values are filled in

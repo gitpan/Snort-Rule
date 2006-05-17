@@ -40,13 +40,14 @@ OBJECT METHODS
 
     Accepts:
 
-      -action [string] ? [alert|log|pass|...] : 'alert'
-      -proto [string] ? [ip|udp|tcp|...] : 'IP'
-      -src [string] ? [$strIp] : 'any'
-      -sport [int] ? [$sport] : 'any'
-      -dir [string] ? [->|<-|<>] : '->'
-      -dst [string] ? [$strIp] : 'any'
-      -dport [int] ? [$dport] : 'any'
+      -action => [string] ? [alert|log|pass|...] : 'alert'
+      -proto => [string] ? [ip|udp|tcp|...] : 'IP'
+      -src => [string] ? [$strIp] : 'any'
+      -sport => [int] ? [$sport] : 'any'
+      -dir => [string] ? [->|<-|<>] : '->'
+      -dst => [string] ? [$strIp] : 'any'
+      -dport => [int] ? [$dport] : 'any'
+      -opts => [hashref] ? [hashref] : '';
 
       -parse => $strRule # for parsing an existing rule into the object
 
