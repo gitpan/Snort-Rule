@@ -1,5 +1,11 @@
 Revision history for Perl extension Snort::Rule.
 
+1.01  Wed May 17 15:17:00
+	- ALTERED THE API!! parms are now prefixed by '-' (ie: '-parm => ').
+	- Fixed new() so default values are filled in
+	- opts() now accepts args as a HASHREF
+	- Cleaned up docs a little
+
 1.00  Fri Apr 14 12:05:00 2006
 	- Module Cleaned up
 	- Documentation cleaned for initial release
