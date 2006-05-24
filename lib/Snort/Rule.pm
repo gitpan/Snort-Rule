@@ -40,7 +40,7 @@ use 5.008006;
 use strict;
 use warnings;
 
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 # Put any options in here that require quotes around them
 my @QUOTED_OPTIONS = ('MSG','URICONTENT','CONTENT','PCRE');
@@ -88,7 +88,8 @@ sub init {
 	$parms{-dir} 	= $parms{-dir} ? $parms{-dir} : '->';
 	$parms{-dst} 	= $parms{-dst} ? $parms{-dst} : 'any';
 	$parms{-dport} 	= $parms{-dport} ? $parms{-dport} : 'any';
-	$parms{-opts} 	= $parms{-opts} ? (ref($parms{-opts} eq 'HASH') : '';
+
+	$parms{-opts} 	= '' if(!(ref($parms{-opts}) eq 'HASH'));
 
 	$self->action(	$parms{-action});
 	$self->proto(	$parms{-proto});
@@ -98,6 +99,7 @@ sub init {
 	$self->dst(	$parms{-dst});
 	$self->dport(	$parms{-dport});
 	$self->opts(	$parms{-opts});
+	
 }
 
 =head2 string
@@ -240,7 +242,7 @@ This method will also accept HASHREF's for easier use:
   });
 
 =cut
-
+use Data::Dumper;
 sub opts {
 	my ($self,$opt,$v) = @_;
 	if (defined($opt)) {
@@ -267,13 +269,14 @@ sub opts {
 sub fixQuotes {
 	my ($opt, $v) = @_;
 	foreach my $option (@QUOTED_OPTIONS) {
-		if (uc($opt) eq $option) {
+		if (defined($v) && (uc($opt) eq $option)) {
 			if (!($v =~ /^\"\S+|\s+\"$/)) {		# do we have the appropriate quotes? (anchored for pcre)
 				$v =~ s/^\"|\"$//g;		# strip the quotes
 				$v = "\"$v\"";			# fix em
 			}
 			last;
 		}
+		elsif(!defined($v)) { $v = "\"\""; }
 	}
 	return $v;
 }
