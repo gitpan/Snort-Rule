@@ -36,11 +36,10 @@ This is a very simple snort rule object. It was developed to allow for scripted 
 
 =cut
 
-use 5.008006;
 use strict;
 use warnings;
 
-our $VERSION = '1.03';
+our $VERSION = '1.04';
 
 # Put any options in here that require quotes around them
 my @QUOTED_OPTIONS = ('MSG','URICONTENT','CONTENT','PCRE');
