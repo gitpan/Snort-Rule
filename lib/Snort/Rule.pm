@@ -39,7 +39,7 @@ This is a very simple snort rule object. It was developed to allow for scripted 
 use strict;
 use warnings;
 
-our $VERSION = '1.04';
+our $VERSION = '1.05';
 
 # Put any options in here that require quotes around them
 my @QUOTED_OPTIONS = ('MSG','URICONTENT','CONTENT','PCRE');
@@ -107,16 +107,27 @@ Outputs the rule in string form.
 
   print $sr->string()."\n";
 
+Prints "options only" string:
+
+  print $sr->string(-optionsOnly => 1)."\n";
+
 =cut
 
 sub string {
-	my $self = shift;
-	my $rule = $self->action().' '.$self->proto().' '.$self->src().' '.$self->sport().' '.$self->dir().' '.$self->dst().' '.$self->dport().' (';
+	my ($self,%parms) = @_;
+	my $rule = '';
+
+	$rule = $self->action().' '.$self->proto().' '.$self->src().' '.$self->sport().' '.$self->dir().' '.$self->dst().' '.$self->dport().' (' unless($parms{-optionsOnly});
 	my @sort = sort { $a <=> $b } keys %{$self->opts()};
 	foreach my $key (@sort) {
-		$rule .= ' '.$self->opts->{$key}->{opt}.': '.$self->opts->{$key}->{val}.';';
+		if ($self->opts->{$key}->{opt}) {
+           		$rule .= ' '.$self->opts->{$key}->{opt};
+			$rule .= ':'.$self->opts->{$key}->{val} if($self->opts->{$key}->{val} && $self->opts->{$key}->{val} ne '""');
+			$rule .= ';';
+	        }
 	}
-	$rule .= ' )';
+	$rule .= ' )' unless($parms{-optionsOnly});
+	$rule =~ s/^ // if($parms{-optionsOnly});
 	return $rule;
 }
 
@@ -238,10 +249,13 @@ This method will also accept HASHREF's for easier use:
   	msg 	=> 'test1',
   	rev 	=> '222',
   	content => 'Subject|3A|',
+	nocase => '',
   });
 
-=cut
-use Data::Dumper;
+  By passing an option => '', the parser will set its value to "''". When $self->string() is called, the option will be written as: option;
+  ex: nocase => '', will result in an option output of: ...., nocase; ...
+
+=cut
 sub opts {
 	my ($self,$opt,$v) = @_;
 	if (defined($opt)) {
@@ -261,6 +275,25 @@ sub opts {
 		}
 	}
 	return $self->{_opts};
+}
+
+=head2 opt
+
+Gets the value of the first option with a given name.
+
+  $rule->opt(option);
+  print $rule->opt('sid') . ': ' . $rule->opt('msg');
+
+=cut
+sub opt {
+	my ($self,$opt) = @_;
+	if (defined($opt)) {
+        	my @sort = sort { $a <=> $b } keys %{$self->opts()};
+        	foreach my $key (@sort) {
+                		return $self->opts->{$key}->{val} if($self->opts->{$key}->{opt} eq $opt);
+        	}
+	}
+	return undef;
 }
 
 # INTERNAL FUNCTIONS ( for now )
@@ -286,7 +319,7 @@ sub parseRule {
 	$r[1] =~ s/\)$//;
 
 	my @meta = split(/\s+/,$r[0]);
-	my @opts = split(/\;/,$r[1]);
+	my @opts = split(/\s*;\s*/,$r[1]);
 
 	$self->action(	$meta[0]);
 	$self->proto(	$meta[1]);
@@ -297,9 +330,7 @@ sub parseRule {
 	$self->dport(	$meta[6]);
 
 	foreach my $x (@opts) {
-		my ($opt, $v) = split(/\:/, $x);
-		$opt =~ s/\s+//;			# clean up the spaces
-		$v =~ s/\s+// if($v);
+ 		my ($opt, $v) = split(/\s*:\s*/, $x);
 		$self->opts($opt, $v);
 	}
 }
