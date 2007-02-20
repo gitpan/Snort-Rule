@@ -39,7 +39,7 @@ This is a very simple snort rule object. It was developed to allow for scripted 
 use strict;
 use warnings;
 
-our $VERSION = '1.05';
+our $VERSION = '1.06';
 
 # Put any options in here that require quotes around them
 my @QUOTED_OPTIONS = ('MSG','URICONTENT','CONTENT','PCRE');
@@ -255,7 +255,8 @@ This method will also accept HASHREF's for easier use:
   By passing an option => '', the parser will set its value to "''". When $self->string() is called, the option will be written as: option;
   ex: nocase => '', will result in an option output of: ...., nocase; ...
 
-=cut
+=cut
+
 sub opts {
 	my ($self,$opt,$v) = @_;
 	if (defined($opt)) {

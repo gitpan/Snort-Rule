@@ -58,6 +58,10 @@ OBJECT METHODS
 
       print $sr->string()."\n";
 
+    Prints "options only" string:
+
+      print $sr->string(-optionsOnly => 1)."\n";
+
   action
     Sets and returns the rule action [alert,log,pass,...]
 
@@ -117,7 +121,17 @@ OBJECT METHODS
             msg     => 'test1',
             rev     => '222',
             content => 'Subject|3A|',
+            nocase => '',
       });
+
+      By passing an option => '', the parser will set its value to "''". When $self->string() is called, the option will be written as: option;
+      ex: nocase => '', will result in an option output of: ...., nocase; ...
+
+  opt
+    Gets the value of the first option with a given name.
+
+      $rule->opt(option);
+      print $rule->opt('sid') . ': ' . $rule->opt('msg');
 
 COPYRIGHT AND LICENSE
     Copyright (C) 2006 by Wes Young
