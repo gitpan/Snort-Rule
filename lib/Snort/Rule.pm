@@ -39,7 +39,7 @@ This is a very simple snort rule object. It was developed to allow for scripted 
 use strict;
 use warnings;
 
-our $VERSION = '1.06';
+our $VERSION = '1.07';
 
 # Put any options in here that require quotes around them
 my @QUOTED_OPTIONS = ('MSG','URICONTENT','CONTENT','PCRE');
@@ -331,7 +331,7 @@ sub parseRule {
 	$self->dport(	$meta[6]);
 
 	foreach my $x (@opts) {
- 		my ($opt, $v) = split(/\s*:\s*/, $x);
+ 		my ($opt, $v) = split(/\s*:\s*/, $x, 2);
 		$self->opts($opt, $v);
 	}
 }

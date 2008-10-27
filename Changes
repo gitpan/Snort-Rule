@@ -1,5 +1,8 @@
 Revision history for Perl extension Snort::Rule.
 
+1.07  Sun Oct 26
+	- fixed minor bug with rule splitting Rule.pm +334 so we only get a single pair
+
 1.06  Tue Feb 20 09:00:00
 	- downgraded 'use 5.00800' to 'use 5.005000' in the Makefile for compatability issues
 
